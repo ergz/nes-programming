@@ -25,9 +25,11 @@ RESET:
     lda #0
     ldx #$FF 
 MemLoop:                    ; loop from $FF until the zero flag is enabled
-    sta $0,x                ; store that value in A into the mem position $0+x <- where x is register changing memory
+    sta $0,x                ; store that value in A into the mem position $0+x <- where x is register changing memory starting at $FF
     dex
     bne MemLoop
+
+    sta $0                 ; zero out the last value not covered in the loop
 
 NMI:
     rti
