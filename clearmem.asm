@@ -1,7 +1,6 @@
 ; iNES Header
 
 .segment "HEADER"
-.org $7FF0                  ; start at address $7FF0
 .byte $4E,$45,$53,$1A       ; 4 bytes with character 'N', 'E', 'S', '\n'
 .byte $02                   ; 2x 16kb of program code
 .byte $01                   ; 1x 8kb of character rom
@@ -13,13 +12,13 @@
 .byte $00,$00,$00,$00,$00   ; padding
 
 .segment "CODE"
-.org $8000
 
 
 RESET:
     sei                     ; disable all interrupts
     cld                     ; clear the decimal mode flag
     ldx #$FF
+    inx                     ; to wrap around from $FF -> $00
     txs
     txa                     ; A = 0
 
@@ -37,7 +36,7 @@ ClearRam:
     sta $0700,x             ; this will clear $0700+$00 -> $0700+$FF => $0700 - $07FF is cleared
 
     inx
-    bne ClearRam            ; by the end of this loop we will have cleared mem $0000 - $07FF are needed
+    bne ClearRam            ; by the end of this loop we will have cleared mem $0000 - $07FF as needed
 
 LoopForever:
     jmp LoopForever
@@ -50,7 +49,6 @@ IRQ:
     rti
 
 .segment "VECTORS"
-.org $FFFA
 .word NMI
 .word RESET
 .word IRQ
