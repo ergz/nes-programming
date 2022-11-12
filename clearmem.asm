@@ -20,16 +20,28 @@ RESET:
     sei                     ; disable all interrupts
     cld                     ; clear the decimal mode flag
     ldx #$FF
-    txs                     ; init the stack pointer at the bottom of the stack
+    txs
+    txa                     ; A = 0
 
-    lda #0
-    ldx #$FF 
-MemLoop:                    ; loop from $FF until the zero flag is enabled
-    sta $0,x                ; store that value in A into the mem position $0+x <- where x is register changing memory starting at $FF
-    dex
-    bne MemLoop
+; The strategy for the clearing 2kb of RAM when we have only 
+; 8bit registers is to use the x register and a series of "starting points"
 
-    sta $0                 ; zero out the last value not covered in the loop
+ClearRam:
+    sta $0000,x             ; this will clear $0000+$00 -> $0000+$FF => $0000 - $00FF is cleared
+    sta $0100,x             ; this will clear $0100+$00 -> $0100+$FF => $0100 - $01FF is cleared
+    sta $0200,x 
+    sta $0300,x 
+    sta $0400,x 
+    sta $0500,x 
+    sta $0600,x 
+    sta $0700,x 
+
+    inx
+    bne ClearRam           
+
+LoopForever:
+    jmp LoopForever
+
 
 NMI:
     rti
