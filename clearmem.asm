@@ -29,15 +29,15 @@ RESET:
 ClearRam:
     sta $0000,x             ; this will clear $0000+$00 -> $0000+$FF => $0000 - $00FF is cleared
     sta $0100,x             ; this will clear $0100+$00 -> $0100+$FF => $0100 - $01FF is cleared
-    sta $0200,x 
-    sta $0300,x 
-    sta $0400,x 
-    sta $0500,x 
-    sta $0600,x 
-    sta $0700,x 
+    sta $0200,x             ; ----
+    sta $0300,x             ; ---- 
+    sta $0400,x             ; ----
+    sta $0500,x             ; ----
+    sta $0600,x             ; ----
+    sta $0700,x             ; this will clear $0700+$00 -> $0700+$FF => $0700 - $07FF is cleared
 
     inx
-    bne ClearRam           
+    bne ClearRam            ; by the end of this loop we will have cleared mem $0000 - $07FF are needed
 
 LoopForever:
     jmp LoopForever
