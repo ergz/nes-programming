@@ -44,7 +44,7 @@ RESET:
     ldx #6
     txa
     tay
-    
+
 
 
 
